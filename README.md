@@ -33,6 +33,11 @@ Username: duncan.rowe1@ethereal.email
 
 Password: KGdSJv9N8B581TzQcU
 
+Hesabınızı oluşturduktan sonra https://ethereal.email/login adresine giderek verilen kullanıcı adı ve şifre ile giriş yapabilirsiniz.
+
+Gönderilen e-postaları burada görebilir, içeriklerini inceleyebilirsiniz.
+
+
 
 
 ##  Technologies
