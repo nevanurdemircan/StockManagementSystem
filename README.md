@@ -12,12 +12,12 @@ ASP.NET Core MVC ile geliştirilmiş bu proje, küçük ve orta ölçekli işlet
 
 - **Stok Kart Yönetimi**  
   - Ürün adı, açıklaması, KDV oranı, alış/satış fiyatı ve birim türü tanımlama
-    <img width="1642" alt="image" src="https://github.com/user-attachments/assets/9a87f66c-b3cf-43ea-9495-1d463565441b" />
+<img width="1531" alt="image" src="https://github.com/user-attachments/assets/c24fef78-affc-4438-a31e-e2184d41b3c7" />
 
 - **Satın Alma Sözleşmesi**  
   - Bir cari kart ve bir veya daha fazla stok kartı ile sözleşme oluşturma  
   - Satın alma sonrası **otomatik e-posta bildirimi** (MailKit + Ethereal)
-    <img width="1710" alt="image" src="https://github.com/user-attachments/assets/1a1e0224-63fe-48eb-b56e-0ff375d59652" />
+<img width="1517" alt="image" src="https://github.com/user-attachments/assets/7b30c576-abf4-4767-a6f6-d891b4973144" />
 
 
 ---
