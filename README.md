@@ -23,5 +23,5 @@ Stock Management System
 - Entity Framework Core
 - AutoMapper
 - MailKit
-- SQL Server
+- PostgreSQL
 
