@@ -1,0 +1,146 @@
+@model StockManagementSystem.Models.Dtos.StockCardIndexViewDto
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Stock Cards</h5>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createStockCardModal">
+        <i class="bi bi-plus-circle"></i> Add
+    </button>
+</div>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Code</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Unit</th>
+        <th scope="col">Vat Rate</th>
+        <th scope="col">Purchase Price</th>
+        <th scope="col">Sale Price</th>
+        <th scope="col">Enabled</th>
+        <th scope="col">Updated Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    @{
+        var index = 1;
+    }
+    @foreach (var item in Model.StockCards)
+    {
+        <tr>
+            <th scope="row">@index</th>
+            <td>@item.Code</td>
+            <td>@item.Name</td>
+            <td>@item.Description</td>
+            <td>@item.UnitType</td>
+            <td>@item.VatRate</td>
+            <td>@item.PurchasePrice</td>
+            <td>@item.SalePrice</td>
+            <td>
+                @if (item.Enabled)
+                {
+                    <span class="text-success">&#10003;</span>
+                    <!-- ✔ -->
+                }
+                else
+                {
+                    <span class="text-danger">&#10007;</span>
+                    <!-- ✘ -->
+                }
+            </td>
+            <td>@item.UpdatedDate</td>
+        </tr>
+        index++;
+    }
+    </tbody>
+</table>
+<div class="modal fade" id="createStockCardModal" tabindex="-1" aria-labelledby="createStockCardModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="Save" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createStockCardModalLabel">Stock Card Add</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Code</label>
+                            <div class="col-sm-9">
+                                <input name="Code" class="form-control" required maxlength="45"/>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Name</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="Name" class="form-control" required maxlength="45"
+                                       pattern="[A-Za-zşŞıİğĞüÜöÖçÇ\s]+"/>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Description</label>
+                            <div class="col-sm-9">
+                                <input name="Description" class="form-control" required maxlength="50"
+                                       pattern="[A-Za-zşŞıİğĞüÜöÖçÇ\s]+"/>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label asp-for="UnitTypes" class="col-sm-3 col-form-label">Unit Type</label>
+                            <div class="col-sm-9">
+                                <select class="form-select" name="UnitType" required>
+                                    <option value="" disabled selected>Please select a unit type</option>
+                                    @foreach (var item in Model.UnitTypes)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="UnitTypes" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Vat Rate</label>
+                            <div class="col-sm-9">
+                                <input type="number" name="VatRate" class="form-control"/>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Purchase Price</label>
+                            <div class="col-sm-9">
+                                <input type="number" name="PurchasePrice" class="form-control"/>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Sale Price</label>
+                            <div class="col-sm-9">
+                                <input type="number" name="SalePrice" class="form-control"/>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-9">
+                                <div class="form-check">
+                                    <input name="Enabled" class="form-check-input" type="checkbox" value="true"/>
+                                    <label class="form-check-label">Enabled?</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

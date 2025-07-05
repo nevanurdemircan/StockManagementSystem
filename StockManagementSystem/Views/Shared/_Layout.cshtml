@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>@ViewData["Title"] - StockManagementSystem</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/StockManagementSystem.styles.css" asp-append-version="true"/>
+
+
+    <style>
+        .nav-tabs .nav-link {
+            color: #495057;
+            border: none;
+            padding: 0.5rem 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: #0d6efd;
+            background-color: transparent;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #0d6efd !important;
+            font-weight: 600;
+            border-bottom: 3px solid #0d6efd;
+            background-color: transparent;
+        }
+
+        .nav-tabs {
+            border-bottom: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-tabs .nav-item:not(:last-child) {
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"
+               style="font-weight:700; font-size:1.25rem; letter-spacing:2px; color:#0d6efd; text-transform:uppercase;">
+                StockMS
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                @{
+                    var stockManagementController = ViewContext.RouteData.Values["controller"]?.ToString();
+                }
+                <ul class="nav nav-tabs mb-3">
+                    <li class="nav-item">
+                        <a class="nav-link @(stockManagementController == "PurchaseContract" ? "active" : "")"
+                           asp-controller="PurchaseContract" asp-action="Index">
+                            <i class="bi bi-file-earmark-text me-1"></i> Purchase Contract
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(stockManagementController == "CurrentCard" ? "active" : "")"
+                           asp-controller="CurrentCard" asp-action="Index">
+                            <i class="bi bi-person-vcard me-1"></i> Current Card
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(stockManagementController == "StockCard" ? "active" : "")"
+                           asp-controller="StockCard" asp-action="Index">
+                            <i class="bi bi-box-seam me-1"></i> Stock Card
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; 2025 - StockManagementSystem
+    </div>
+</footer>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

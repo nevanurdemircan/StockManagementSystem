@@ -1,0 +1,224 @@
+@model StockManagementSystem.Models.Dtos.PurchaseContractIndexViewDto
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Purchase Contract</h5>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPurchaseContractModal">
+        <i class="bi bi-plus-circle"></i> Add
+    </button>
+</div>
+
+<div class="table-responsive">
+    <table id="currentCardsTable" class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Code</th>
+            <th scope="col">Full Name</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Mail</th>
+            <th scope="col">Total</th>
+            
+        </tr>
+        </thead>
+        <tbody>
+        @{
+            var index = 1;
+        }
+        @foreach (var item in Model.PurchaseContracts)
+        {
+                var sumQuantity = item.PurchaseContractStockCards?.Sum(sc => sc.Quantity) ?? 0;
+            
+            <tr>
+                <th scope="row">@index</th>
+                <td>@item.CurrentCard.Code</td>
+                <td>@item.CurrentCard.Name @item.CurrentCard.Surname</td>
+                <td>@item.CurrentCard.Phone</td>
+                <td>@item.CurrentCard.Mail</td>
+                <td>@sumQuantity</td>
+            </tr>
+            index++;
+            
+        }
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="createPurchaseContractModal" tabindex="-1"
+     aria-labelledby="createPurchaseContractModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="purchaseContractForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createPurchaseContractModalLabel">Purchase Contract Add</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Document No</label>
+                            <div class="col-sm-9">
+                                <input name="DocumentCode" class="form-control" required maxlength="45"/>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="mb-3 row">
+                        <label class="col-sm-3 col-form-label">Current Card</label>
+                        <div class="col-sm-9">
+                            <select name="CurrentCardId" id="currentCardSelect" class="form-select" required>
+                                <option value="">-- Select Current Card --</option>
+                                @foreach (var stock in Model.CurrentCards)
+                                {
+                                    <option value="@stock.Id">
+                                        @stock.Name
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Stock Card</label>
+                            <div class="col-sm-9">
+                                <select name="StockCardId" id="stockCardSelect" class="form-select" required>
+                                    <option value="">-- Select Stock Card --</option>
+                                    @foreach (var stock in Model.StockCards)
+                                    {
+                                        <option value="@stock.Id"
+                                                data-saleprice="@stock.SalePrice"
+                                                data-vatrate="@stock.VatRate">
+                                            @stock.Name
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Unit</label>
+                            <div class="col-sm-9">
+                                <select name="Unit" id="unit" class="form-select" required>
+                                    <option value="">-- Select Unit --</option>
+                                    <option value="1">
+                                        Kilogram
+                                    </option>
+                                    <option value="2">
+                                        Piece
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Quantity</label>
+                            <div class="col-sm-9">
+                                <input name="Quantity" class="form-control" required maxlength="50"/>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Add</button>
+                </div>
+            </form>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Stock Name</th>
+                    <th scope="col">Unit</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Vat Price</th>
+                    <th scope="col">Total</th>
+                </tr>
+                </thead>
+                <tbody id="addPurchaseTable">
+                </tbody>
+            </table>
+
+            @section Scripts{
+                <script>
+                    const addPurchaseTableData = [];
+
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const form = document.getElementById("purchaseContractForm");
+
+                        form.addEventListener("submit", function (e) {
+                            e.preventDefault();
+
+                            const formData = new FormData(form);
+                            addPurchaseTableData.push(formData);
+
+                            const addPurchaseTable = document.getElementById("addPurchaseTable");
+                            addPurchaseTable.innerHTML = "";
+
+                            const stockCards = @Html.Raw(Json.Serialize(Model.StockCards));
+                            const currentCards = @Html.Raw(Json.Serialize(Model.CurrentCards));
+                            for (let i = 0; i < addPurchaseTableData.length; i++) {
+                                const data = addPurchaseTableData[i]
+                                const stockCard = stockCards.find(i => i.id == data.get("StockCardId"))
+                                const trElement = document.createElement("tr");
+                                const vatPrice = stockCard.salePrice - stockCard.salePrice / (1 + (stockCard.vatRate / 100))
+                                trElement.innerHTML = `
+                                <td>${i + 1}</td>
+                                <td>${stockCard.name}</td>
+                                <td>${data.get("Unit") == 1 ? "Kilogram" : "Piece"}</td>
+                                <td>${data.get("Quantity")}</td>
+                                <td>${stockCard.salePrice}</td>
+                                <td>${(vatPrice).toFixed(2)}</td>
+                                <td>${(stockCard.salePrice + vatPrice).toFixed(2)}</td>
+`
+                                addPurchaseTable.appendChild(trElement);
+                            }
+                        });
+                    });
+                    document.getElementById("submit-button").addEventListener("click", function () {
+                        debugger
+
+                        const purchaseContractStockCarts = addPurchaseTableData.map(formData =>
+
+                            ({
+                                stockCardId: formData.get("StockCardId"),
+                                quantity: formData.get("Quantity"),
+                                unit: Number(formData.get("Unit")),
+                            })
+                        )
+                        const documentCode = addPurchaseTableData[0].get("DocumentCode")
+                        const currentCardId = addPurchaseTableData[0].get("CurrentCardId")
+
+                        const request = {
+                            documentCode: documentCode,
+                            currentCardId: currentCardId,
+                            purchaseContractStockCards: purchaseContractStockCarts
+                        }
+                        fetch("/PurchaseContract/Save", {
+                            method: "POST",
+                            body: JSON.stringify(request),
+                            headers: {
+                                "Content-Type": "application/json"
+                            }
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    return response.text();
+                                }
+                                throw new Error("Sunucu hatası");
+                            })
+                            .then(data => {
+                                alert("İşlem başarılı: ");
+                            })
+                            .catch(error => {
+                                console.error("Hata:", error);
+                            });
+                    })
+
+                </script>
+            }
+
+            <div class="modal-footer">
+                <button id="submit-button" type="button" class="btn btn-success">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
