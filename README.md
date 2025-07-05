@@ -17,10 +17,23 @@ ASP.NET Core MVC ile geliştirilmiş bu proje, küçük ve orta ölçekli işlet
 - **Satın Alma Sözleşmesi**  
   - Bir cari kart ve bir veya daha fazla stok kartı ile sözleşme oluşturma  
   - Satın alma sonrası **otomatik e-posta bildirimi** (MailKit + Ethereal)
-<img width="1517" alt="image" src="https://github.com/user-attachments/assets/7b30c576-abf4-4767-a6f6-d891b4973144" />
+<img width="1539" alt="image" src="https://github.com/user-attachments/assets/0600c69f-8207-4a18-aea1-d84e0c5193a8" />
 
 
 ---
+
+E-Posta Gönderimi & Ethereal Kullanımı
+Bu projede, satın alma sözleşmesi oluşturulduktan sonra otomatik olarak e-posta bildirimi gönderilmektedir. Geliştirme ve test sürecinde gerçek e-posta adresleri yerine Ethereal adlı sahte bir SMTP sunucusu kullanılmıştır.
+
+SMTP Host: smtp.ethereal.email
+
+SMTP Port: 587
+
+Username: duncan.rowe1@ethereal.email
+
+Password: KGdSJv9N8B581TzQcU
+
+
 
 ##  Technologies
 
