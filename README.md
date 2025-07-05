@@ -8,7 +8,7 @@ ASP.NET Core MVC ile geliştirilmiş bu proje, küçük ve orta ölçekli işlet
 
 - **Cari Kart Yönetimi**  
   - Müşteri veya tedarikçi bilgilerini oluşturma & listeleme
-    <img width="1698" alt="image" src="https://github.com/user-attachments/assets/574fc3e4-fc2b-48e2-9b4a-fd7c7630d652" />
+<img width="1558" alt="image" src="https://github.com/user-attachments/assets/fe0b8bb8-6add-4a4a-afb3-1868b9ed9ecd" />
 
 - **Stok Kart Yönetimi**  
   - Ürün adı, açıklaması, KDV oranı, alış/satış fiyatı ve birim türü tanımlama
