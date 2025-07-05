@@ -16,7 +16,7 @@
             <th scope="col">Phone</th>
             <th scope="col">Mail</th>
             <th scope="col">Total</th>
-            
+
         </tr>
         </thead>
         <tbody>
@@ -25,8 +25,8 @@
         }
         @foreach (var item in Model.PurchaseContracts)
         {
-                var sumQuantity = item.PurchaseContractStockCards?.Sum(sc => sc.Quantity) ?? 0;
-            
+            var sumQuantity = item.PurchaseContractStockCards?.Sum(sc => sc.Quantity) ?? 0;
+
             <tr>
                 <th scope="row">@index</th>
                 <td>@item.CurrentCard.Code</td>
@@ -36,7 +36,6 @@
                 <td>@sumQuantity</td>
             </tr>
             index++;
-            
         }
         </tbody>
     </table>
@@ -54,7 +53,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
-
                         <div class="mb-3 row">
                             <label class="col-sm-3 col-form-label">Document No</label>
                             <div class="col-sm-9">
@@ -62,20 +60,19 @@
                             </div>
                         </div>
 
-                    </div>
-                    <div class="mb-3 row">
-                        <label class="col-sm-3 col-form-label">Current Card</label>
-                        <div class="col-sm-9">
-                            <select name="CurrentCardId" id="currentCardSelect" class="form-select" required>
-                                <option value="">-- Select Current Card --</option>
-                                @foreach (var stock in Model.CurrentCards)
-                                {
-                                    <option value="@stock.Id">
-                                        @stock.Name
-                                    </option>
-                                }
-                            </select>
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Current Card</label>
+                            <div class="col-sm-9">
+                                <select name="CurrentCardId" id="currentCardSelect" class="form-select" required>
+                                    <option value="">-- Select Current Card --</option>
+                                    @foreach (var stock in Model.CurrentCards)
+                                    {
+                                        <option value="@stock.Id">@stock.Name</option>
+                                    }
+                                </select>
+                            </div>
                         </div>
+
                         <div class="mb-3 row">
                             <label class="col-sm-3 col-form-label">Stock Card</label>
                             <div class="col-sm-9">
@@ -83,8 +80,7 @@
                                     <option value="">-- Select Stock Card --</option>
                                     @foreach (var stock in Model.StockCards)
                                     {
-                                        <option value="@stock.Id"
-                                                data-saleprice="@stock.SalePrice"
+                                        <option value="@stock.Id" data-saleprice="@stock.SalePrice"
                                                 data-vatrate="@stock.VatRate">
                                             @stock.Name
                                         </option>
@@ -98,12 +94,8 @@
                             <div class="col-sm-9">
                                 <select name="Unit" id="unit" class="form-select" required>
                                     <option value="">-- Select Unit --</option>
-                                    <option value="1">
-                                        Kilogram
-                                    </option>
-                                    <option value="2">
-                                        Piece
-                                    </option>
+                                    <option value="1">Kilogram</option>
+                                    <option value="2">Piece</option>
                                 </select>
                             </div>
                         </div>
@@ -114,8 +106,8 @@
                                 <input name="Quantity" class="form-control" required maxlength="50"/>
                             </div>
                         </div>
-
                     </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">Add</button>
@@ -137,61 +129,76 @@
                 </tbody>
             </table>
 
-            @section Scripts{
+            @section Scripts {
                 <script>
                     const addPurchaseTableData = [];
+
+                    function renderPurchaseTable() {
+                        const addPurchaseTable = document.getElementById("addPurchaseTable");
+                        addPurchaseTable.innerHTML = "";
+
+                        const stockCards = @Html.Raw(Json.Serialize(Model.StockCards));
+
+                        if (addPurchaseTableData.length === 0) {
+                            const noItemRow = document.createElement("tr");
+                            const noItemCol = document.createElement("td");
+                            noItemCol.colSpan = 7;
+                            noItemCol.className = "text-center text-muted";
+                            noItemCol.textContent = "No items added";
+                            noItemRow.appendChild(noItemCol);
+                            addPurchaseTable.appendChild(noItemRow);
+                            return;
+                        }
+
+                        for (let i = 0; i < addPurchaseTableData.length; i++) {
+                            const data = addPurchaseTableData[i];
+                            const stockCard = stockCards.find(sc => sc.id == data.get("StockCardId"));
+                            const vatPrice = stockCard.salePrice - stockCard.salePrice / (1 + (stockCard.vatRate / 100));
+                            const trElement = document.createElement("tr");
+                            trElement.innerHTML = `
+                    <td>${i + 1}</td>
+                    <td>${stockCard.name}</td>
+                    <td>${data.get("Unit") == 1 ? "Kilogram" : "Piece"}</td>
+                    <td>${data.get("Quantity")}</td>
+                    <td>${stockCard.salePrice}</td>
+                    <td>${vatPrice.toFixed(2)}</td>
+                    <td>${(stockCard.salePrice + vatPrice).toFixed(2)}</td>
+                `;
+                            addPurchaseTable.appendChild(trElement);
+                        }
+                    }
 
                     document.addEventListener("DOMContentLoaded", function () {
                         const form = document.getElementById("purchaseContractForm");
 
+                        renderPurchaseTable(); // Sayfa ilk yüklendiğinde boşsa mesaj göster
+
                         form.addEventListener("submit", function (e) {
                             e.preventDefault();
-
                             const formData = new FormData(form);
                             addPurchaseTableData.push(formData);
-
-                            const addPurchaseTable = document.getElementById("addPurchaseTable");
-                            addPurchaseTable.innerHTML = "";
-
-                            const stockCards = @Html.Raw(Json.Serialize(Model.StockCards));
-                            const currentCards = @Html.Raw(Json.Serialize(Model.CurrentCards));
-                            for (let i = 0; i < addPurchaseTableData.length; i++) {
-                                const data = addPurchaseTableData[i]
-                                const stockCard = stockCards.find(i => i.id == data.get("StockCardId"))
-                                const trElement = document.createElement("tr");
-                                const vatPrice = stockCard.salePrice - stockCard.salePrice / (1 + (stockCard.vatRate / 100))
-                                trElement.innerHTML = `
-                                <td>${i + 1}</td>
-                                <td>${stockCard.name}</td>
-                                <td>${data.get("Unit") == 1 ? "Kilogram" : "Piece"}</td>
-                                <td>${data.get("Quantity")}</td>
-                                <td>${stockCard.salePrice}</td>
-                                <td>${(vatPrice).toFixed(2)}</td>
-                                <td>${(stockCard.salePrice + vatPrice).toFixed(2)}</td>
-`
-                                addPurchaseTable.appendChild(trElement);
-                            }
+                            renderPurchaseTable();
                         });
                     });
+
                     document.getElementById("submit-button").addEventListener("click", function () {
-                        debugger
-
                         const purchaseContractStockCarts = addPurchaseTableData.map(formData =>
-
                             ({
                                 stockCardId: formData.get("StockCardId"),
                                 quantity: formData.get("Quantity"),
                                 unit: Number(formData.get("Unit")),
                             })
-                        )
-                        const documentCode = addPurchaseTableData[0].get("DocumentCode")
-                        const currentCardId = addPurchaseTableData[0].get("CurrentCardId")
+                        );
+
+                        const documentCode = addPurchaseTableData[0]?.get("DocumentCode");
+                        const currentCardId = addPurchaseTableData[0]?.get("CurrentCardId");
 
                         const request = {
                             documentCode: documentCode,
                             currentCardId: currentCardId,
                             purchaseContractStockCards: purchaseContractStockCarts
-                        }
+                        };
+
                         fetch("/PurchaseContract/Save", {
                             method: "POST",
                             body: JSON.stringify(request),
@@ -200,19 +207,16 @@
                             }
                         })
                             .then(response => {
-                                if (response.ok) {
-                                    return response.text();
-                                }
+                                if (response.ok) return response.text();
                                 throw new Error("Sunucu hatası");
                             })
                             .then(data => {
-                                alert("İşlem başarılı: ");
+                                alert("İşlem başarılı.");
                             })
                             .catch(error => {
                                 console.error("Hata:", error);
                             });
-                    })
-
+                    });
                 </script>
             }
 
