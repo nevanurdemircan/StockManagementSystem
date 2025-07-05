@@ -22,7 +22,7 @@ ASP.NET Core MVC ile geliştirilmiş bu proje, küçük ve orta ölçekli işlet
 
 ---
 
-E-Posta Gönderimi & Ethereal Kullanımı
+## E-Posta Gönderimi & Ethereal Kullanımı
 Bu projede, satın alma sözleşmesi oluşturulduktan sonra otomatik olarak e-posta bildirimi gönderilmektedir. Geliştirme ve test sürecinde gerçek e-posta adresleri yerine Ethereal adlı sahte bir SMTP sunucusu kullanılmıştır.
 
 SMTP Host: smtp.ethereal.email
